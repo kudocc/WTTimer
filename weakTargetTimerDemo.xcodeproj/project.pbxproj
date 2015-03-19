@@ -14,6 +14,7 @@
 		27BAEDFD1AB97CCA0020CA26 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27BAEDFC1AB97CCA0020CA26 /* Images.xcassets */; };
 		27BAEE001AB97CCA0020CA26 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27BAEDFE1AB97CCA0020CA26 /* LaunchScreen.xib */; };
 		27BAEE0C1AB97CCA0020CA26 /* weakTargetTimerDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BAEE0B1AB97CCA0020CA26 /* weakTargetTimerDemoTests.m */; };
+		27BAEE171AB97CF40020CA26 /* WTTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BAEE161AB97CF40020CA26 /* WTTimer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		27BAEE051AB97CCA0020CA26 /* weakTargetTimerDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = weakTargetTimerDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27BAEE0A1AB97CCA0020CA26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27BAEE0B1AB97CCA0020CA26 /* weakTargetTimerDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = weakTargetTimerDemoTests.m; sourceTree = "<group>"; };
+		27BAEE151AB97CF40020CA26 /* WTTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTTimer.h; sourceTree = "<group>"; };
+		27BAEE161AB97CF40020CA26 /* WTTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTTimer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +84,8 @@
 		27BAEDEE1AB97CCA0020CA26 /* weakTargetTimerDemo */ = {
 			isa = PBXGroup;
 			children = (
+				27BAEE151AB97CF40020CA26 /* WTTimer.h */,
+				27BAEE161AB97CF40020CA26 /* WTTimer.m */,
 				27BAEDF31AB97CCA0020CA26 /* AppDelegate.h */,
 				27BAEDF41AB97CCA0020CA26 /* AppDelegate.m */,
 				27BAEDF61AB97CCA0020CA26 /* ViewController.h */,
@@ -219,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27BAEE171AB97CF40020CA26 /* WTTimer.m in Sources */,
 				27BAEDF81AB97CCA0020CA26 /* ViewController.m in Sources */,
 				27BAEDF51AB97CCA0020CA26 /* AppDelegate.m in Sources */,
 				27BAEDF21AB97CCA0020CA26 /* main.m in Sources */,
@@ -344,6 +350,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = weakTargetTimerDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -354,6 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = weakTargetTimerDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
