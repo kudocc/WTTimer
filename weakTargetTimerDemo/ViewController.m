@@ -15,6 +15,15 @@
 
 @implementation TestObj
 
+- (id)init
+{
+    self = [super init] ;
+    if (self) {
+        NSLog(@"%@ %@", self, NSStringFromSelector(_cmd)) ;
+    }
+    return self ;
+}
+
 - (void)dealloc
 {
     NSLog(@"%@ %@", self, NSStringFromSelector(_cmd)) ;
@@ -48,8 +57,9 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     _obj = [[TestObj alloc] init] ;
-//    _timer1 = [WTTimer scheduledTimerWithTimeInterval:2.0 target:_obj selector:@selector(timerFired:) userInfo:nil repeats:YES] ;
+    _timer1 = [WTTimer scheduledTimerWithTimeInterval:2.0 target:_obj selector:@selector(timerFired:) userInfo:nil repeats:YES] ;
     
+    /*
     NSMethodSignature *methodSig = [_obj methodSignatureForSelector:@selector(timerFiredForInvocation:)] ;
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig] ;
     invocation.target = _obj ;
@@ -57,10 +67,10 @@
     ViewController *vc = self ;
     [invocation setArgument:&vc atIndex:2] ;
     _timer2 = [WTTimer scheduledTimerWithTimeInterval:2.0 invocation:invocation repeats:YES] ;
-    
+    */
     NSLog(@"timer is scheduled") ;
     
-    [self performSelector:@selector(delay) withObject:nil afterDelay:5.0] ;
+    [self performSelector:@selector(delay) withObject:nil afterDelay:3.0] ;
 }
 
 - (void)delay

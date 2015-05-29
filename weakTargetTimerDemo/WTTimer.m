@@ -66,6 +66,11 @@
     return self ;
 }
 
+- (void)dealloc
+{
+    NSLog(@"%@ %@", self, NSStringFromSelector(_cmd)) ;
+}
+
 #pragma mark - Create with NSInvocation
 
 + (WTTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo
@@ -83,8 +88,7 @@
     
     // config WTTimer
     timer.wtTarget = invocation.target ;
-    // Because [invocation retainArguments] will retain its target, so set its target to nil and keep it in wtTarget
-    invocation.target = nil ;
+    invocation.target = obj ;
     [invocation retainArguments] ;
     timer.invocation = invocation ;
     return timer ;
@@ -140,12 +144,15 @@
         if (_invocation) {
             [_invocation invokeWithTarget:_wtTarget] ;
         } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             [_wtTarget performSelector:_selector withObject:self] ;
+#pragma clang diagnostic pop
         }
     } else {
         // the target is deallocated, the timer should be invalidated
         [self.timer invalidate] ;
-        NSLog(@"the target is deallocated, the timer is invalidated") ;
+        NSLog(@"the target is deallocated, invalidate the timer") ;
     }
 }
 
