@@ -75,20 +75,20 @@
 
 + (WTTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo
 {
-    TimerDelegateObject *obj = [[TimerDelegateObject alloc] init] ;
+    TimerDelegateObject *delegateObj = [[TimerDelegateObject alloc] init] ;
     
     NSDate *dateFire = [NSDate dateWithTimeIntervalSinceNow:ti] ;
     WTTimer *timer = [[WTTimer alloc] initWithFireDate:dateFire
                                               interval:ti
-                                                target:obj
+                                                target:delegateObj
                                               selector:@selector(timerFired:)
                                               userInfo:nil
                                                repeats:yesOrNo] ;
-    obj.delegate = timer ;
+    delegateObj.delegate = timer ;
     
     // config WTTimer
     timer.wtTarget = invocation.target ;
-    invocation.target = obj ;
+    invocation.target = delegateObj ;
     [invocation retainArguments] ;
     timer.invocation = invocation ;
     return timer ;
