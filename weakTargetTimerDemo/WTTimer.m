@@ -8,26 +8,28 @@
 
 #import "WTTimer.h"
 
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+#endif
+
 @class TimerDelegateObject ;
 @protocol WTTimerDelegate <NSObject>
-
 - (void)wtTimerFired:(TimerDelegateObject *)obj ;
-
 @end
 
 @interface TimerDelegateObject : NSObject
 
 @property (nonatomic, weak) id<WTTimerDelegate> delegate ;
-
 - (void)timerFired:(NSTimer *)timer ;
-
 @end
 
 @implementation TimerDelegateObject
 
 - (void)dealloc
 {
+#ifdef DEBUG
     NSLog(@"%@ %@", self, NSStringFromSelector(_cmd)) ;
+#endif
 }
 
 - (void)timerFired:(NSTimer *)timer
@@ -45,8 +47,10 @@
 @property (nonatomic, weak) id wtTarget ;
 @property (nonatomic) SEL selector ;
 
+/*
 // for NSInvocation
 @property (nonatomic, strong) NSInvocation *invocation ;
+ */
 
 @end
 
@@ -68,9 +72,15 @@
 
 - (void)dealloc
 {
+#ifdef DEBUG
     NSLog(@"%@ %@", self, NSStringFromSelector(_cmd)) ;
+#endif
+    if ([_timer isValid]) {
+        [_timer invalidate];
+    }
 }
 
+/*
 #pragma mark - Create with NSInvocation
 
 + (WTTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo
@@ -101,7 +111,7 @@
         [[NSRunLoop currentRunLoop] addTimer:timer.timer forMode:NSDefaultRunLoopMode] ;
     }
     return timer ;
-}
+}*/
 
 #pragma mark - Create with target and selector
 
@@ -141,18 +151,16 @@
 - (void)wtTimerFired:(TimerDelegateObject *)obj
 {
     if (_wtTarget) {
-        if (_invocation) {
-            [_invocation invokeWithTarget:_wtTarget] ;
-        } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [_wtTarget performSelector:_selector withObject:self] ;
+        [_wtTarget performSelector:_selector withObject:self] ;
 #pragma clang diagnostic pop
-        }
     } else {
         // the target is deallocated, the timer should be invalidated
         [self.timer invalidate] ;
+#ifdef DEBUG
         NSLog(@"the target is deallocated, invalidate the timer") ;
+#endif
     }
 }
 

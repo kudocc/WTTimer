@@ -11,6 +11,9 @@
 
 @interface TestObj : NSObject
 
+@property (nonatomic, strong) WTTimer *timer1;
+@property (nonatomic, strong) WTTimer *timer2;
+
 @end
 
 @implementation TestObj
@@ -43,9 +46,6 @@
 
 @interface ViewController ()
 
-@property (nonatomic, strong) WTTimer *timer1 ;
-@property (nonatomic, strong) WTTimer *timer2 ;
-
 @property (nonatomic, strong) TestObj *obj ;
 
 @end
@@ -57,18 +57,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     _obj = [[TestObj alloc] init] ;
-//    _timer1 = [WTTimer scheduledTimerWithTimeInterval:2.0 target:_obj selector:@selector(timerFired:) userInfo:nil repeats:YES] ;
-    
-    NSMethodSignature *methodSig = [_obj methodSignatureForSelector:@selector(timerFiredForInvocation:)] ;
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig] ;
-    invocation.target = _obj ;
-    invocation.selector = @selector(timerFiredForInvocation:) ;
-    id objArgument = [[TestObj alloc] init] ;
-    [invocation setArgument:&objArgument atIndex:2] ;
-    _timer2 = [WTTimer scheduledTimerWithTimeInterval:2.0 invocation:invocation repeats:YES] ;
-    NSLog(@"timer is scheduled") ;
-    
-    [self performSelector:@selector(delay) withObject:nil afterDelay:3.0] ;
+    _obj.timer1 = [WTTimer scheduledTimerWithTimeInterval:2.0 target:_obj selector:@selector(timerFired:) userInfo:nil repeats:YES] ;
+    [self performSelector:@selector(delay) withObject:nil afterDelay:5.0] ;
 }
 
 - (void)delay
