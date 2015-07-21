@@ -1,6 +1,6 @@
 //
 //  WTTimer.h
-//  HelloWorld
+//  weakTargetTimerDemo
 //
 //  Created by yuanrui on 15-3-18.
 //  Copyright (c) 2015年 KudoCC. All rights reserved.
@@ -13,6 +13,14 @@
  *  Unlike NSTimer, you should keep a strong reference to WTTimer because we invalidate the timer in its dealloc method
  */
 @interface WTTimer : NSObject
+
++ (WTTimer *)timerWithTimeInterval:(NSTimeInterval)ti
+                        invocation:(NSInvocation *)invocation
+                           repeats:(BOOL)yesOrNo;
++ (WTTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti
+                                 invocation:(NSInvocation *)invocation
+                                    repeats:(BOOL)yesOrNo;
+
 
 + (WTTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti
                                      target:(id)aTarget

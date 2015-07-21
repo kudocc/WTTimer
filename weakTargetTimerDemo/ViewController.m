@@ -37,9 +37,9 @@
     NSLog(@"%@, %@", timer, NSStringFromSelector(_cmd)) ;
 }
 
-- (void)timerFiredForInvocation:(id)obj
+- (void)timerFiredForInvocation:(id)obj intValue:(int)integer
 {
-    NSLog(@"%@, %@", obj, NSStringFromSelector(_cmd)) ;
+    NSLog(@"%@, %@, %d", obj, NSStringFromSelector(_cmd), integer) ;
 }
 
 @end
@@ -57,14 +57,27 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     _obj = [[TestObj alloc] init] ;
-    _obj.timer1 = [WTTimer scheduledTimerWithTimeInterval:2.0 target:_obj selector:@selector(timerFired:) userInfo:nil repeats:YES] ;
-    [self performSelector:@selector(delay) withObject:nil afterDelay:5.0] ;
+    const NSTimeInterval interval = 2.0;
+#if 0
+    _obj.timer1 = [WTTimer scheduledTimerWithTimeInterval:interval target:_obj selector:@selector(timerFired:) userInfo:nil repeats:YES] ;
+#else
+    SEL selector = @selector(timerFiredForInvocation:intValue:);
+    NSMethodSignature *methodSig = [_obj methodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
+    invocation.target = _obj;
+    invocation.selector = selector;
+    ViewController *vc = self;
+    int aIntValue = 1024;
+    [invocation setArgument:&vc atIndex:2];
+    [invocation setArgument:&aIntValue atIndex:3];
+    _obj.timer1 = [WTTimer scheduledTimerWithTimeInterval:interval invocation:invocation repeats:YES];
+#endif
+    [self performSelector:@selector(delay) withObject:nil afterDelay:5.0];
 }
 
 - (void)delay
 {
     NSLog(@"%@ %@", self, NSStringFromSelector(_cmd)) ;
-    
     self.obj = nil ;
 }
 

@@ -1,6 +1,6 @@
 //
 //  WTTimer.m
-//  HelloWorld
+//  weakTargetTimerDemo
 //
 //  Created by yuanrui on 15-3-18.
 //  Copyright (c) 2015年 KudoCC. All rights reserved.
@@ -44,13 +44,11 @@
 @property (nonatomic, strong) NSTimer *timer ;
 
 // target and selector
-@property (nonatomic, weak) id wtTarget ;
+@property (nonatomic, weak) id weakTarget ;
 @property (nonatomic) SEL selector ;
 
-/*
 // for NSInvocation
 @property (nonatomic, strong) NSInvocation *invocation ;
- */
 
 @end
 
@@ -80,7 +78,6 @@
     }
 }
 
-/*
 #pragma mark - Create with NSInvocation
 
 + (WTTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo
@@ -97,7 +94,7 @@
     delegateObj.delegate = timer ;
     
     // config WTTimer
-    timer.wtTarget = invocation.target ;
+    timer.weakTarget = invocation.target ;
     invocation.target = delegateObj ;
     [invocation retainArguments] ;
     timer.invocation = invocation ;
@@ -111,7 +108,7 @@
         [[NSRunLoop currentRunLoop] addTimer:timer.timer forMode:NSDefaultRunLoopMode] ;
     }
     return timer ;
-}*/
+}
 
 #pragma mark - Create with target and selector
 
@@ -129,7 +126,7 @@
     obj.delegate = timer ;
     // config WTTimer
     timer.selector = aSelector ;
-    timer.wtTarget = aTarget ;
+    timer.weakTarget = aTarget ;
     return timer ;
 }
 
@@ -150,11 +147,28 @@
 
 - (void)wtTimerFired:(TimerDelegateObject *)obj
 {
-    if (_wtTarget) {
+    if (_weakTarget) {
+        if (_invocation) {
+            // If I use [_invocation invokeWithTarget:_weakTarget], the _weakTarget will be retained
+            // Thanks to @unkosun for reminding me a way to work around
+            // Create a temporary NSInvocation to invoke the target, it will release the target when it deallocated
+            NSMethodSignature *methodSignature = _invocation.methodSignature;
+            NSInvocation *invocationTmp = [NSInvocation invocationWithMethodSignature:methodSignature];
+            invocationTmp.target = _weakTarget;
+            invocationTmp.selector = _invocation.selector;
+            for (NSUInteger i = 2; i < methodSignature.numberOfArguments; ++i) {
+                void *arg = nil;
+                [_invocation getArgument:&arg atIndex:i];
+                [invocationTmp setArgument:&arg atIndex:i];
+            }
+            [invocationTmp retainArguments];
+            [invocationTmp invoke];
+        } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [_wtTarget performSelector:_selector withObject:self] ;
+            [_weakTarget performSelector:_selector withObject:self] ;
 #pragma clang diagnostic pop
+        }
     } else {
         // the target is deallocated, the timer should be invalidated
         [self.timer invalidate] ;
