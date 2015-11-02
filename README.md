@@ -12,4 +12,4 @@ when timer fires, the delegate will delegate back to `WTTimer`.
 
 ### From CocoaPods
 
-pod 'weakTargetTimer', '~> 0.0.1'
+pod 'weakTargetTimer', '~> 0.0.2'
